@@ -22,34 +22,87 @@ app.post("/generate-certificate", (req, res) => {
   res.setHeader("Content-Type", "application/pdf");
   doc.pipe(res);
 
-  const imagePath = path.join(
-    __dirname,
-    "301691a7-7a1b-4439-8431-17a7227f86c9.png"
-  );
+  const imagePath = path.join(__dirname, "public", "certificate-template.png");
+
   if (fs.existsSync(imagePath)) {
+   
     doc.image(imagePath, 0, 0, {
       width: doc.page.width,
       height: doc.page.height,
     });
+
+    doc
+      .font("Times-BoldItalic")
+      .fontSize(36)
+      .fillColor("#000000")
+      .text(name, 0, 263, {
+        align: "center",
+      });
+
+  
+    doc
+      .font("Times-Italic")
+      .fontSize(18)
+      .fillColor("#000000")
+      .text(`Date: ${new Date().toLocaleDateString("en-GB")}`, 0, 412, {
+        align: "center",
+      });
+
   } else {
-    console.error("Template image not found!");
+  
+    doc.rect(20, 20, doc.page.width - 40, doc.page.height - 40)
+      .lineWidth(4)
+      .stroke("#a68b00");
+
+
+    doc
+      .fontSize(40)
+      .fillColor("#1a1a1a")
+      .font("Times-Bold")
+      .text("Certificate of Achievement", 0, 100, { align: "center" });
+
+   
+    doc
+      .fontSize(20)
+      .fillColor("#333")
+      .font("Times-Italic")
+      .text("This is proudly presented to", 0, 160, { align: "center" });
+
+  
+    doc
+      .fontSize(36)
+      .fillColor("#000")
+      .font("Times-BoldItalic")
+      .text(name, 0, 220, { align: "center" });
+
+  
+    doc
+      .fontSize(16)
+      .fillColor("#333")
+      .font("Times-Roman")
+      .text(
+        `For outstanding performance and dedication.`,
+        0,
+        280,
+        { align: "center" }
+      );
+
+    
+    doc
+      .fontSize(14)
+      .fillColor("#333")
+      .text(`Date: ${new Date().toLocaleDateString("en-GB")}`, 100, 400, {
+        align: "left",
+      });
+
+   
+    doc
+      .fontSize(14)
+      .fillColor("#333")
+      .text("Signature: ______________", -100, 400, {
+        align: "right",
+      });
   }
-
-
-doc
-  .font('Times-BoldItalic')
-  .fontSize(36)
-  .fillColor('#3d3b3a')
-  .text(name, 0, 280, {
-    align: 'center'
-  });
-
-
-doc
-  .font('Times-Italic')
-  .fontSize(16)
-  .fillColor('#3d3b3a')
-  .text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 450, 495);
 
   doc.end();
 });

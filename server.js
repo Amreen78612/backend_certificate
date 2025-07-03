@@ -109,6 +109,10 @@ app.post(`/generate-certificate`, (req, res) => {
   doc.end();
 });
 
+app.get("/", (req, res) => {
+  res.send("🎉 Certificate Generator API is running!");
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
